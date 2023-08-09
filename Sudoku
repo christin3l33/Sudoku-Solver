@@ -1,0 +1,55 @@
+import numpy as np
+
+
+sudoku = input("Enter Sudoku Numbers\n")
+#Examples of possible inputs
+    #070000009510420600080300700008001370023080040400900100962800030000010400700203096
+    #530070000600195000098000060800060003400803001700020006060000280000419005000080000
+
+
+grid = [
+    [int(sudoku[(i+j)-1]) for i in range(1,10)]
+    for j in range(0,81,9)
+    ]
+
+print("Sudoku board:")
+print(np.matrix(grid),"\n")
+
+def possible(row, col, num):
+    global grid
+
+    for i in range(0,9):
+        if grid[row][i] == num:
+            return False
+        
+    for i in range(0,9):
+        if grid[i][col] == num:
+            return False
+
+    squ_col = (col // 3) * 3
+    squ_row = (row // 3) * 3
+    for i in range(0,3):
+        for j in range(0,3):
+            if grid[squ_row+i][squ_col+j] == num:
+                return False
+
+    return True
+
+def solve():
+    global grid
+    for row in range(0,9):
+        for col in range(0,9):
+            if grid[row][col] == 0:
+                for num in range(1,10):
+                    if possible(row, col, num):
+                        grid[row][col] = num
+                        solve()
+                        grid[row][col] = 0
+
+                return
+    
+    print(np.matrix(grid))
+    input("For more possible solutions, press Enter\n")
+
+solve()
+
